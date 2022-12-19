@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { toggleNav } from '../../redux/reducers/view.reducer'
 import { RootState } from '../../redux/store'
@@ -8,6 +8,8 @@ type Props = {}
 export default function SideNav({}: Props) {
 	const { mode } = useSelector((state: RootState) => state.view)
 	const dispatch = useDispatch()
+
+	const [showCreate, setShowCreate] = useState(false)
 
 	return (
 		<div className="iq-sidebar  sidebar-default" style={{ zIndex: 10 }}>
@@ -44,14 +46,17 @@ export default function SideNav({}: Props) {
 				<div className="scroll-content">
 					<div className="new-create select-dropdown input-prepend input-append">
 						<div className="btn-group">
-							<div data-toggle="dropdown">
+							<div data-toggle="dropdown" onClick={() => setShowCreate(true)}>
 								<div className="search-query selet-caption">
 									<i className="las la-plus pr-2"></i>Create New
 								</div>
-								<span className="search-replace"></span>
+
 								<span className="caret"></span>
 							</div>
-							<ul className="dropdown-menu">
+							<ul
+								className={`dropdown-menu ${showCreate && 'show'}`}
+								style={{ zIndex: 100 }}
+							>
 								<li>
 									<div className="item">
 										<i className="ri-folder-add-line pr-3"></i>New Folder
@@ -62,12 +67,21 @@ export default function SideNav({}: Props) {
 										<i className="ri-file-upload-line pr-3"></i>Upload Files
 									</div>
 								</li>
-								<li>
-									<div className="item">
-										<i className="ri-folder-upload-line pr-3"></i>Upload Folders
-									</div>
-								</li>
 							</ul>
+							{showCreate && (
+								<span
+									className="search-replace p-5"
+									onClick={() => setShowCreate(false)}
+									style={{
+										position: 'fixed',
+										left: 0,
+										right: 0,
+										bottom: 0,
+										top: 10,
+										zIndex: 99,
+									}}
+								></span>
+							)}
 						</div>
 					</div>
 					<nav className="iq-sidebar-menu">
