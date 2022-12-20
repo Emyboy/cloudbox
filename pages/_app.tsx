@@ -8,10 +8,12 @@ import '../public/assets/vendor/remixicon/fonts/remixicon.css'
 import { store } from '../redux/store'
 import { Provider } from 'react-redux'
 import Login from '../components/Login'
+import MasterControl from '../components/MasterControl'
 
 export default function MyApp({ Component, pageProps }: any) {
 	return (
 		<Provider store={store}>
+			<MasterControl />
 			<div className="wrapper">
 				<Login />
 				<Component {...pageProps} />

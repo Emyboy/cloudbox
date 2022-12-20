@@ -23,7 +23,10 @@ export default function Login({}: Props) {
 
 				dispatch(setUserData({ ...user?.providerData[0] }))
 				Cookies.set('accessToke', String(token), { expires: 30 })
+				Cookies.set('idToken', String(credential?.idToken), { expires: 30 })
+				localStorage.setItem('user', JSON.stringify(user));
 
+				// console.log({ token, user, credential})
 			})
 			.catch((error) => {
 				// Handle Errors here.

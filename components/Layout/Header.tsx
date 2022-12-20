@@ -26,7 +26,6 @@ export default function Header({}: Props) {
 	}, [mode])
 
 	useEffect(() => {
-		console.log('SHOW --', showNav)
 		if (showNav) {
 			document.querySelector('body')?.classList.add('sidebar-main')
 		} else {

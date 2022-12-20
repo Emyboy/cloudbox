@@ -1,9 +1,13 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
+import { RootState } from '../redux/store'
 
 type Props = {}
 
 export default function Banner({}: Props) {
-  return (
+	const { user } = useSelector((state: RootState) => state.auth)
+
+	return (
 		<div className="col-lg-8">
 			<div
 				className="card card-block card-stretch card-height iq-welcome"
@@ -16,7 +20,7 @@ export default function Banner({}: Props) {
 				<div className="card-body property2-content">
 					<div className="d-flex flex-wrap align-items-center">
 						<div className="col-lg-6 col-sm-6 p-0">
-							<h3 className="mb-3">Welcome Penny</h3>
+							<h3 className="mb-3">Welcome {user?.displayName.split(' ')[0]}</h3>
 							<p className="mb-5">
 								You have 32 new notifications and 23 unread messages to reply
 							</p>

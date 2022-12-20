@@ -1,5 +1,6 @@
 import Head from 'next/head'
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useSelector } from 'react-redux'
 import Banner from '../atoms/Banner'
 import EachFolder from '../atoms/EachFolder'
 import MainLayout from '../components/Layout/MainLayout'
@@ -8,6 +9,8 @@ import SectionList from '../components/SectionList/SectionList'
 type Props = {}
 
 export default function index({}: Props) {
+	
+
 	return (
 		<MainLayout>
 			<div className="row">
