@@ -1,37 +1,45 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
 import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth'
 import { authProvider } from '../firebase'
+import { setUserData } from '../redux/reducers/auth.reducer'
+import Cookies from 'js-cookie'
 
 type Props = {}
 
 export default function Login({}: Props) {
 	const auth = getAuth()
+	const dispatch = useDispatch()
 	const { mode } = useSelector((state: RootState) => state.view)
+	const { user } = useSelector((state: RootState) => state.auth)
 
 	const handleLogin = async () => {
 		signInWithPopup(auth, authProvider)
 			.then((result) => {
-				// This gives you a Google Access Token. You can use it to access the Google API.
 				const credential = GoogleAuthProvider.credentialFromResult(result)
 				const token = credential?.accessToken
-				// The signed-in user info.
 				const user = result.user
-				// ...
 
-                console.log({ user, token})
+				dispatch(setUserData({ ...user?.providerData[0] }))
+				Cookies.set('accessToke', String(token), { expires: 30 })
+
 			})
 			.catch((error) => {
 				// Handle Errors here.
 				const errorCode = error.code
 				const errorMessage = error.message
+				alert(errorMessage)
 				// The email of the user's account used.
 				const email = error.customData.email
 				// The AuthCredential type that was used.
 				const credential = GoogleAuthProvider.credentialFromError(error)
 				// ...
 			})
+	}
+
+	if (user) {
+		return null
 	}
 
 	return (
