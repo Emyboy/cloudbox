@@ -1,9 +1,21 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import EachQueue from './EachQueue'
+import {useWindowSize } from 'react-use';
 
 type Props = {}
 
 export default function UploadQueue({}: Props) {
+	const { width } = useWindowSize()
+	const [show,setShow] = useState(false);
+
+	useEffect(() => {
+		setShow(true)
+	},[]);
+
+	if(!show){
+		return null
+	}
+
 	return (
 		<div
 			className="card border mb-0 shadow "
@@ -13,7 +25,7 @@ export default function UploadQueue({}: Props) {
 				right: 15,
 				minHeight: '50vh',
 				maxHeight: '50vh',
-				minWidth: '35vw',
+				minWidth: '600px',
 				zIndex: 70,
 			}}
 		>
