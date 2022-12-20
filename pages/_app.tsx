@@ -9,11 +9,18 @@ import { store } from '../redux/store'
 import { Provider } from 'react-redux'
 import Login from '../components/Login'
 import MasterControl from '../components/MasterControl'
+import MasterPopup from '../components/Popups/MasterPopup'
+import UploadQueue from '../components/Upload/UploadQueue'
 
 export default function MyApp({ Component, pageProps }: any) {
 	return (
 		<Provider store={store}>
-			<MasterControl />
+			<>
+				<MasterPopup />
+				<MasterControl />
+				<UploadQueue />
+			</>
+
 			<div className="wrapper">
 				<Login />
 				<Component {...pageProps} />
