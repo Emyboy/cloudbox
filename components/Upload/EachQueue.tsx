@@ -7,11 +7,12 @@ import {
 	uploadBytes,
 	uploadBytesResumable,
 } from 'firebase/storage'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../redux/store'
 import { BsFillCheckCircleFill } from 'react-icons/bs'
 import { useWindowSize } from 'react-use'
 import { FileService } from '../../services/file.service'
+import { setRecentFiles } from '../../redux/reducers/file.reducer'
 
 type Props = {
 	data: FileData
@@ -19,7 +20,9 @@ type Props = {
 
 export default function EachQueue({ data }: Props) {
 	const { user } = useSelector((state: RootState) => state.auth)
+	const { recent_files } = useSelector((state: RootState) => state.file)
 	const { width } = useWindowSize()
+	const dispatch = useDispatch()
 
 	const [progress, setProgress] = useState(0)
 	const [isDone, setIsDone] = useState(false)
@@ -54,15 +57,17 @@ export default function EachQueue({ data }: Props) {
 				() => {
 					// Handle successful uploads on complete
 					// For instance, get the download URL: https://firebasestorage.googleapis.com/...
-					getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+					getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
 						// console.log('File available at', downloadURL)
-						FileService.addFile(
+						const newFile:any = await FileService.addFile(
 							data.name,
 							user?.email,
 							downloadURL,
 							data.type,
 							data.size
 						)
+						console.log('THE NEW FILE --', newFile)
+						dispatch(setRecentFiles([newFile, ...recent_files]))
 					})
 					setIsDone(true)
 				}

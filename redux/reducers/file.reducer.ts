@@ -1,7 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { FileState, UploadedFile } from '../../types/file.types'
-import { query, orderBy, limit, collection } from 'firebase/firestore'
-import { db } from '../../firebase'
 
 const initialState: FileState = {
 	recent_files: [],

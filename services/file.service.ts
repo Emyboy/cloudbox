@@ -1,4 +1,4 @@
-import { collection, addDoc, deleteDoc, doc } from 'firebase/firestore'
+import { collection, addDoc, deleteDoc, doc, getDoc } from 'firebase/firestore'
 import { db } from '../firebase'
 import { v4 as UUID } from 'uuid'
 import { deleteObject, getStorage, ref } from 'firebase/storage'
@@ -12,7 +12,6 @@ export class FileService {
 		type: string,
 		size: number
 	) {
-		console.log('CALLD ')
 		try {
 			const newFile = {
 				name,
@@ -25,9 +24,14 @@ export class FileService {
 				_id: UUID(),
 			}
 
+			console.log('SAVING TO DB --', newFile)
+
 			const docRef = await addDoc(collection(db, 'files'), newFile)
 			// console.log('Document written with ID: ', docRef.id)
-			return docRef.id
+			
+			const theDoc = doc(db, 'files', docRef.id)
+			const docSnap = await getDoc(theDoc)
+			return { ...docSnap.data(), doc: docRef.id }
 		} catch (e) {
 			console.error('Error adding document: ', e)
 		}
