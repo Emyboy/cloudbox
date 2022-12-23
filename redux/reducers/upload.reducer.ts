@@ -5,7 +5,7 @@ import { UploadState } from '../../types/upload.types'
 
 const initialState: UploadState = {
 	showUploadQueue: false,
-	showUploadPopup: true,
+	showUploadPopup: false,
 	uploadQueue: [],
 }
 
@@ -19,8 +19,11 @@ export const counterSlice = createSlice({
 		addFilesToQueue: (state, action: PayloadAction<FileData[]>) => {
 			console.log('THE PAYLOAD --', action.payload)
 			sessionStorage.setItem('files', JSON.stringify(action.payload))
-			
+
 			state.uploadQueue = [...state.uploadQueue, ...action.payload]
+		},
+		toggleUploadPopup: (state) => {
+			state.showUploadPopup = !state.showUploadPopup
 		},
 		// incrementByAmount: (state, action: PayloadAction<number>) => {
 		// 	state.value += action.payload
@@ -29,6 +32,7 @@ export const counterSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { toggleUploadQueue, addFilesToQueue } = counterSlice.actions
+export const { toggleUploadQueue, addFilesToQueue, toggleUploadPopup } =
+	counterSlice.actions
 
 export default counterSlice.reducer

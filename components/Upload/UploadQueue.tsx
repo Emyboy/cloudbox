@@ -19,27 +19,31 @@ export default function UploadQueue({}: Props) {
 		return null
 	}
 
+	if (uploadQueue.length < 0) {
+		return false
+	}
 	return (
 		<div
 			className="card border mb-0 shadow "
 			style={{
 				position: 'fixed',
-				bottom: 15,
-				right: 15,
+				bottom: width < 780 ? 0 : 15,
+				right: width < 780 ? 0 : 15,
 				minHeight: '50vh',
 				maxHeight: '50vh',
-				minWidth: '600px',
+				minWidth: width < 780 ? '100vw' : '600px',
+				width: width < 780 ? '100vw' : '500px',
 				zIndex: 70,
 			}}
 		>
 			<div className="d-flex px-3 pt-3 justify-content-between align-items-center">
 				<h5>Upload Queue</h5>
-				<button className="btn">
+				<button className="btn" onClick={() => {}}>
 					<i className="las la-angle-down"></i>
 				</button>
 			</div>
 			<div className="card-body" style={{ overflowY: 'auto' }}>
-				<ul className="list-group">
+				<ul className="list-group pb-5">
 					{uploadQueue.map((val, i) => {
 						return (
 							<li className="list-group-item" key={`_queue_-${i}`}>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { toggleUploadPopup } from '../../redux/reducers/upload.reducer'
 import { toggleNav } from '../../redux/reducers/view.reducer'
 import { RootState } from '../../redux/store'
 
@@ -62,7 +63,10 @@ export default function SideNav({}: Props) {
 										<i className="ri-folder-add-line pr-3"></i>New Folder
 									</div>
 								</li>
-								<li>
+								<li onClick={() => {
+									dispatch(toggleUploadPopup());
+									setShowCreate(false);
+								}}>
 									<div className="item">
 										<i className="ri-file-upload-line pr-3"></i>Upload Files
 									</div>

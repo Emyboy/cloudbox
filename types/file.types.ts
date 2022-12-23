@@ -9,9 +9,9 @@ export interface UploadedFile {
 }
 
 export interface FileData {
-	file: FileList | null
+	file: string
 	name: string
 	type: string
 	size: number
-	user: string
+	user: string | undefined
 }
