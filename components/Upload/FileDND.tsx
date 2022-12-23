@@ -1,10 +1,15 @@
 import React, { FormEvent, ReactHTMLElement } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { addFilesToQueue } from '../../redux/reducers/upload.reducer'
+import { RootState } from '../../redux/store';
 
 type Props = {}
 
 export default function FileDND({}: Props) {
-	const handleFileSelect = (e: FileList | null) => {
-		console.log(e)
+	const dispatch = useDispatch();
+	const { user } = useSelector((state:RootState) => state.auth);
+	const handleFileSelect = (e: any[]) => {
+		dispatch(addFilesToQueue(e))
 	}
 
 	return (
@@ -32,7 +37,7 @@ export default function FileDND({}: Props) {
 				id="label"
 				hidden
 				multiple
-				onChange={(e) => handleFileSelect(e.target.files)}
+				onChange={(e:any) => handleFileSelect(e.target.files)}
 			/>
 		</>
 	)

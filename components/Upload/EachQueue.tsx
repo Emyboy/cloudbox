@@ -1,8 +1,11 @@
 import React from 'react'
+import { FileData } from '../../types/file.types'
 
-type Props = {}
+type Props = {
+	data: FileData
+}
 
-export default function EachQueue({}: Props) {
+export default function EachQueue({ data }: Props) {
 	return (
 		<div className="m-0">
 			<div className="d-flex align-items-center">
@@ -10,9 +13,11 @@ export default function EachQueue({}: Props) {
 					<i className="ri-file-excel-line"></i>
 				</div>
 				<div className="w-100">
-					<div className='mb-2 d-flex justify-content-between align-items-center'>
-						<h6>File Name</h6>
-                        <button className='btn btn-sm'><i className='las la-times'></i></button>
+					<div className="mb-2 d-flex justify-content-between align-items-center">
+						<h6>{data.name}</h6>
+						<button className="btn btn-sm">
+							<i className="las la-times"></i>
+						</button>
 					</div>
 					<div className="progress mb-0" style={{ height: '10px' }}>
 						<div

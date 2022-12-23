@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from 'react'
 import EachQueue from './EachQueue'
-import {useWindowSize } from 'react-use';
+import { useWindowSize } from 'react-use'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../redux/store'
 
 type Props = {}
 
 export default function UploadQueue({}: Props) {
 	const { width } = useWindowSize()
-	const [show,setShow] = useState(false);
+	const [show, setShow] = useState(false)
+	const { uploadQueue } = useSelector((state: RootState) => state.upload)
 
 	useEffect(() => {
 		setShow(true)
-	},[]);
+	}, [])
 
-	if(!show){
+	if (!show) {
 		return null
 	}
 
@@ -29,21 +32,21 @@ export default function UploadQueue({}: Props) {
 				zIndex: 70,
 			}}
 		>
-            <div className='d-flex px-3 pt-3 justify-content-between align-items-center'>
-                <h5>Upload Queue</h5>
-                <button className='btn'><i className='las la-angle-down'></i></button>
-            </div>
+			<div className="d-flex px-3 pt-3 justify-content-between align-items-center">
+				<h5>Upload Queue</h5>
+				<button className="btn">
+					<i className="las la-angle-down"></i>
+				</button>
+			</div>
 			<div className="card-body" style={{ overflowY: 'auto' }}>
 				<ul className="list-group">
-					<li className="list-group-item">
-						<EachQueue />
-					</li>
-					<li className="list-group-item">
-						<EachQueue />
-					</li>
-					<li className="list-group-item">
-						<EachQueue />
-					</li>
+					{uploadQueue.map((val, i) => {
+						return (
+							<li className="list-group-item" key={`_queue_-${i}`}>
+								<EachQueue data={val} />
+							</li>
+						)
+					})}
 				</ul>
 			</div>
 		</div>
