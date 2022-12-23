@@ -21,7 +21,7 @@ import { RootState } from '../redux/store'
 
 type Props = {}
 
-export default function index({}: Props) {
+export default function Index({}: Props) {
 	const dispatch = useDispatch()
 	const { user } = useSelector((state: RootState) => state.auth)
 	const { recent_files } = useSelector((state: RootState) => state.file)
@@ -39,7 +39,7 @@ export default function index({}: Props) {
 				)
 				const querySnapshot = await getDocs(q)
 				querySnapshot.forEach((doc) => {
-					data.push(doc.data())
+					data.push({ ...doc.data(), doc: doc.id})
 				})
 				console.log(data)
 				dispatch(setRecentFiles(data))

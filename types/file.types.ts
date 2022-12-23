@@ -1,4 +1,5 @@
 export interface UploadedFile {
+	doc: string
 	uuid: string
 	name: string
 	type: string
