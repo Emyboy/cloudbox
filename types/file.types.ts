@@ -9,9 +9,15 @@ export interface UploadedFile {
 }
 
 export interface FileData {
+	index: number
 	file: string
 	name: string
 	type: string
 	size: number
 	user: string | undefined
+	isDone: boolean
+}
+
+export interface FileState {
+	recent_files: UploadedFile[]
 }

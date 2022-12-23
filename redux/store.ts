@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit'
 import authReducer from './reducers/auth.reducer'
+import fileReducer from './reducers/file.reducer'
 import uploadReducer from './reducers/upload.reducer'
 import viewReducer from './reducers/view.reducer'
 
@@ -7,7 +8,8 @@ export const store = configureStore({
 	reducer: {
 		view: viewReducer,
 		auth: authReducer,
-		upload: uploadReducer
+		upload: uploadReducer,
+		file: fileReducer
 	},
 })
 

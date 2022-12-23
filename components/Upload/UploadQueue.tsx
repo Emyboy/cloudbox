@@ -19,8 +19,8 @@ export default function UploadQueue({}: Props) {
 		return null
 	}
 
-	if (uploadQueue.length < 0) {
-		return false
+	if (uploadQueue.length === 0) {
+		return null
 	}
 	return (
 		<div

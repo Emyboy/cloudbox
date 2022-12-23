@@ -5,28 +5,31 @@ import { RootState } from '../../redux/store'
 import { FileData } from '../../types/file.types'
 
 type Props = {
-	done: () => void;
+	done: () => void
 }
 
 export default function FileDND({ done }: Props) {
 	const dispatch = useDispatch()
 	const { user } = useSelector((state: RootState) => state.auth)
+	const { uploadQueue } = useSelector((state: RootState) => state.upload)
 
 	const handleFileSelect = (e: any[]) => {
 		const newQueue: FileData[] = []
 
 		for (let i = 0; i < e.length; i++) {
 			newQueue.push({
+				index: uploadQueue.length - 1,
 				file: URL.createObjectURL(e[i]),
 				name: e[i].name,
 				size: e[i].size,
 				type: e[i].type,
 				user: user?.uid,
+				isDone: false,
 			})
 		}
 
-		dispatch(addFilesToQueue(newQueue));
-		done();
+		dispatch(addFilesToQueue(newQueue))
+		done()
 	}
 
 	return (

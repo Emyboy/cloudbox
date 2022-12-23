@@ -11,6 +11,7 @@ import { useSelector } from 'react-redux'
 import { RootState } from '../../redux/store'
 import { BsFillCheckCircleFill } from 'react-icons/bs'
 import { useWindowSize } from 'react-use'
+import { FileService } from '../../services/file.service'
 
 type Props = {
 	data: FileData
@@ -53,9 +54,16 @@ export default function EachQueue({ data }: Props) {
 				() => {
 					// Handle successful uploads on complete
 					// For instance, get the download URL: https://firebasestorage.googleapis.com/...
-					// getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-					// 	// console.log('File available at', downloadURL)
-					// })
+					getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+						// console.log('File available at', downloadURL)
+						FileService.addFile(
+							data.name,
+							user?.email,
+							downloadURL,
+							data.type,
+							data.size
+						)
+					})
 					setIsDone(true)
 				}
 			)
