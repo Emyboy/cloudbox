@@ -119,8 +119,8 @@ export default function SideNav({}: Props) {
 							</li>
 							<li className="">
 								<a href="page-files.html" className="">
-									<i className="lar la-file-alt iq-arrow-left"></i>
-									<span>Files</span>
+									<i className="las la-user-friends iq-arrow-left"></i>
+									<span>Shared With Me</span>
 								</a>
 								<ul
 									id="page-files"

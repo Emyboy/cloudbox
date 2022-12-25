@@ -65,7 +65,7 @@ export default function ActionOptions({ setDeleted, fileData }: Props) {
 					Icon={(e) => <RiDeleteBin6Line {...e} />}
 					text="Move To Trash"
 					onClick={() => deleteFile()}
-					size={21}
+					// size={21}
 				/>
 			</Dropdown.Menu>
 		</Dropdown>
@@ -86,7 +86,7 @@ const EachOption = ({
 	return (
 		<Dropdown.Item onClick={onClick}>
 			<div className="d-flex align-items-center my-2">
-				<Icon size={size || 26} />
+				<Icon size={size || 20} />
 				<p className="mb-0 mx-2">{text}</p>
 			</div>
 		</Dropdown.Item>
