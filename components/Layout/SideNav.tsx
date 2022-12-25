@@ -3,17 +3,19 @@ import { useDispatch, useSelector } from 'react-redux'
 import { toggleUploadPopup } from '../../redux/reducers/upload.reducer'
 import { toggleNav } from '../../redux/reducers/view.reducer'
 import { RootState } from '../../redux/store'
+import CreateFolderPopup from '../Popups/CreateFolderPopup'
 
 type Props = {}
 
 export default function SideNav({}: Props) {
 	const { mode } = useSelector((state: RootState) => state.view)
-	const dispatch = useDispatch()
-
+	const dispatch = useDispatch();
+	const [showCreateFolder, setShowCreateFolder] = useState(false)
 	const [showCreate, setShowCreate] = useState(false)
 
 	return (
 		<div className="iq-sidebar  sidebar-default" style={{ zIndex: 10 }}>
+			<CreateFolderPopup show={showCreateFolder} onClose={() => setShowCreateFolder(false)} />
 			<div className="iq-sidebar-logo d-flex align-items-center justify-content-between">
 				<a className="header-logo">
 					{mode === 'light' ? (
@@ -58,7 +60,10 @@ export default function SideNav({}: Props) {
 								className={`dropdown-menu ${showCreate && 'show'}`}
 								style={{ zIndex: 100 }}
 							>
-								<li>
+								<li onClick={() => {
+									setShowCreateFolder(true)
+									setShowCreate(false);
+								}}>
 									<div className="item">
 										<i className="ri-folder-add-line pr-3"></i>New Folder
 									</div>
@@ -90,7 +95,7 @@ export default function SideNav({}: Props) {
 					</div>
 					<nav className="iq-sidebar-menu">
 						<ul id="iq-sidebar-toggle" className="iq-menu">
-							<li className="active">
+							{/* <li className="active">
 								<a href="index.html" className="">
 									<i className="las la-home iq-arrow-left"></i>
 									<span>Dashboard</span>
@@ -100,8 +105,8 @@ export default function SideNav({}: Props) {
 									className="iq-submenu collapse"
 									data-parent="#iq-sidebar-toggle"
 								></ul>
-							</li>
-							<li className="">
+							</li> */}
+							<li className="active">
 								<a
 									href="#mydrive"
 									className="collapsed"
@@ -110,39 +115,7 @@ export default function SideNav({}: Props) {
 								>
 									<i className="las la-hdd"></i>
 									<span>My Drive</span>
-									<i className="las la-angle-right iq-arrow-right arrow-active"></i>
-									<i className="las la-angle-down iq-arrow-right arrow-hover"></i>
 								</a>
-								<ul
-									id="mydrive"
-									className="iq-submenu collapse"
-									data-parent="#iq-sidebar-toggle"
-								>
-									<li className=" ">
-										<a href="page-alexa.html">
-											<i className="lab la-blogger-b"></i>
-											<span>Alexa Workshop</span>
-										</a>
-									</li>
-									<li className=" ">
-										<a href="page-android.html">
-											<i className="las la-share-alt"></i>
-											<span>Android</span>
-										</a>
-									</li>
-									<li className=" ">
-										<a href="page-brightspot.html">
-											<i className="las la-icons"></i>
-											<span>Brightspot</span>
-										</a>
-									</li>
-									<li className=" ">
-										<a href="page-ionic.html">
-											<i className="las la-icons"></i>
-											<span>Ionic Chat App</span>
-										</a>
-									</li>
-								</ul>
 							</li>
 							<li className="">
 								<a href="page-files.html" className="">

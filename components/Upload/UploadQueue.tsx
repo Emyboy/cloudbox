@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import EachQueue from './EachQueue'
 import { useWindowSize } from 'react-use'
 import { useDispatch, useSelector } from 'react-redux'
@@ -13,13 +13,7 @@ export default function UploadQueue({}: Props) {
 	const { uploadQueue, showUploadQueue } = useSelector(
 		(state: RootState) => state.upload
 	)
-	const dispatch = useDispatch();
-
-	
-
-	// if (!show) {
-	// 	return null
-	// }
+	const dispatch = useDispatch()
 
 	if (uploadQueue.length === 0) {
 		return null
@@ -29,13 +23,13 @@ export default function UploadQueue({}: Props) {
 		<>
 			<button
 				onClick={() => dispatch(toggleUploadQueue())}
-				className="btn btn-primary px-3 py-3 rounded-circle shadow"
-				style={{ position: 'fixed', bottom: 15, right: 15, zIndex: 70 }}
+				className="btn btn-primary px-3 py-3 rounded-circle shadow blur-shadow shadow-showcase"
+				style={{ position: 'fixed', bottom: 15, right: 15, zIndex: 100 }}
 			>
 				<IoIosArrowUp size={30} />
 			</button>
 			<div
-				className={`card border mb-0 shadow animate__faster animate__animated ${
+				className={`card border mb-0 shadow blur-shadow shadow-showcase animate__faster animate__animated ${
 					showUploadQueue ? 'animate__slideInUp' : 'animate__slideOutDown'
 				} `}
 				style={{

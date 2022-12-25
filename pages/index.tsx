@@ -9,7 +9,7 @@ import {
 	where,
 } from 'firebase/firestore'
 import Head from 'next/head'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Banner from '../atoms/Banner'
 import EachFolder from '../atoms/EachFolder'
@@ -18,6 +18,7 @@ import SectionList from '../components/SectionList/SectionList'
 import { db } from '../firebase'
 import { setRecentFiles } from '../redux/reducers/file.reducer'
 import { RootState } from '../redux/store'
+import { UploadedFolder } from '../types/folder.types'
 
 type Props = {}
 
@@ -25,24 +26,42 @@ export default function Index({}: Props) {
 	const dispatch = useDispatch()
 	const { user } = useSelector((state: RootState) => state.auth)
 	const { recent_files } = useSelector((state: RootState) => state.file)
+	const [folders, setFolders] = useState<UploadedFolder[]>([])
+
 
 	useEffect(() => {
-		if(user){
+		if (user) {
 			;(async () => {
 				const filesRef = await collection(db, 'files')
 				const data: any = []
 				const q = await query(
 					filesRef,
-					orderBy('createdAt','desc'),
+					orderBy('createdAt', 'desc'),
 					where('user', '==', user.email),
 					limit(8)
 				)
 				const querySnapshot = await getDocs(q)
 				querySnapshot.forEach((doc) => {
-					data.push({ ...doc.data(), doc: doc.id})
+					data.push({ ...doc.data(), doc: doc.id })
 				})
 				console.log(data)
 				dispatch(setRecentFiles(data))
+			})()
+			;(async () => {
+				const filesRef = await collection(db, 'folders')
+				const data: any = []
+				const q = await query(
+					filesRef,
+					orderBy('createdAt', 'desc'),
+					where('user', '==', user.email),
+					limit(8)
+				)
+				const querySnapshot = await getDocs(q)
+				querySnapshot.forEach((doc) => {
+					data.push({ ...doc.data(), doc: doc.id })
+				})
+				console.log(data)
+				setFolders(data)
 			})()
 		}
 	}, [user])
@@ -84,8 +103,8 @@ export default function Index({}: Props) {
 				</div>
 
 				<div className="d-flex flex-column">
-					<SectionList heading="Recent Documents" list={recent_files} />
-					<SectionList heading="Recent Folders" list={[]} />
+					<SectionList heading="Recent Files" list={recent_files} />
+					<SectionList heading="Recent Folders" folders={folders} />
 					<SectionList heading="Other Items" list={[]} />
 				</div>
 			</div>

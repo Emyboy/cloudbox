@@ -2,13 +2,11 @@ import React, { useState } from 'react'
 import { UploadedFile } from '../types/file.types'
 import { AiFillFile, AiFillFileImage, AiFillFilePdf } from 'react-icons/ai'
 import { BsFillFileEarmarkMusicFill } from 'react-icons/bs'
-import { Dropdown } from 'react-bootstrap'
-import { IconBaseProps } from 'react-icons'
-import { FaTrash } from 'react-icons/fa'
-import { MdDriveFileMove, MdShare } from 'react-icons/md'
-import { FileService } from '../services/file.service'
+
+
 import { useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
+import ActionOptions from './ActionOptions'
 
 type Props = {
 	data: UploadedFile
@@ -28,16 +26,6 @@ export default function EachFile({ data }: Props) {
 			return <BsFillFileEarmarkMusicFill size={size} className="text-purple" />
 		} else {
 			return <AiFillFile size={size} />
-		}
-	}
-
-	const deleteFile = async () => {
-		try {
-			await FileService.deleteFile(data.doc, data)
-			setDeleted(true)
-		} catch (error) {
-			setDeleted(false)
-			return Promise.reject(error)
 		}
 	}
 
@@ -66,36 +54,7 @@ export default function EachFile({ data }: Props) {
 									: data.name}
 							</h6>
 							<div className="card-header-toolbar">
-								<Dropdown>
-									<Dropdown.Toggle
-										variant="ghost"
-										id="dropdown-basic"
-										className="p-0 btn"
-										as="button"
-									>
-										<i className="ri-more-2-fill"></i>
-									</Dropdown.Toggle>
-
-									<Dropdown.Menu>
-										<EachOption
-											Icon={(e) => <MdShare {...e} />}
-											text="Share"
-											onClick={() => {}}
-										/>
-										<EachOption
-											Icon={(e) => <MdDriveFileMove {...e} />}
-											text="Move To"
-											onClick={() => {}}
-										/>
-										<hr className="m-0" />
-										<EachOption
-											Icon={(e) => <FaTrash {...e} />}
-											text="Move To Trash"
-											onClick={() => deleteFile()}
-											size={21}
-										/>
-									</Dropdown.Menu>
-								</Dropdown>
+								<ActionOptions fileData={data} setDeleted={e => setDeleted(e)} />
 							</div>
 						</div>
 					</a>
@@ -105,23 +64,3 @@ export default function EachFile({ data }: Props) {
 	)
 }
 
-const EachOption = ({
-	Icon,
-	text,
-	onClick,
-	size,
-}: {
-	Icon: (p: IconBaseProps) => React.ReactElement
-	text: string
-	onClick: () => void
-	size?: number
-}) => {
-	return (
-		<Dropdown.Item onClick={onClick}>
-			<div className="d-flex align-items-center my-2">
-				<Icon size={size || 26} />
-				<p className="mb-0 mx-2">{text}</p>
-			</div>
-		</Dropdown.Item>
-	)
-}

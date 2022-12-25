@@ -1,13 +1,16 @@
 import React from 'react'
 import EachFile from '../../atoms/EachFile'
+import EachFolder from '../../atoms/EachFolder'
 import SectionHeading from '../../atoms/SectionHeading'
 import { UploadedFile } from '../../types/file.types'
+import { UploadedFolder } from '../../types/folder.types'
 
 type Props = {
 	heading: string
 	rightText?: string
 	rightTextURL?: string
-	list: UploadedFile[]
+	list?: UploadedFile[]
+	folders?: UploadedFolder[]
 }
 
 export default function SectionList({
@@ -15,6 +18,7 @@ export default function SectionList({
 	list,
 	rightText,
 	rightTextURL,
+	folders
 }: Props) {
 	return (
 		<div className="mb-5">
@@ -24,8 +28,11 @@ export default function SectionList({
 				rightTextURL={rightTextURL}
 			/>
 			<div className="row">
-				{list.map((val, i) => {
+				{list && list.map((val, i) => {
 					return <EachFile key={`${heading}-${val.name}-${i}`} data={val} />
+				})}
+				{folders && folders.map((val, i) => {
+					return <EachFolder key={`${heading}-${val.name}-${i}`} data={val} />
 				})}
 			</div>
 		</div>
