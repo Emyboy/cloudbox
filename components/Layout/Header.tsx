@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { toggleMode, toggleNav } from '../../redux/reducers/view.reducer'
 import { RootState } from '../../redux/store'
@@ -7,6 +7,8 @@ type Props = {}
 
 export default function Header({}: Props) {
 	const { mode, showNav } = useSelector((state: RootState) => state.view)
+	const { user } = useSelector((state: RootState) => state.auth)
+	const [showProfile, setShowProfile] = useState(false)
 	const dispatch = useDispatch()
 
 	useEffect(() => {
@@ -264,18 +266,26 @@ export default function Header({}: Props) {
 									</div>
 								</li>
 								<li className="nav-item nav-icon dropdown caption-content">
-									<a
-										href="#"
-										className="search-toggle dropdown-toggle"
+									<button
+										className="search-toggle dropdown-toggle btn py-0"
 										id="dropdownMenuButton03"
 										data-toggle="dropdown"
 										aria-haspopup="true"
 										aria-expanded="false"
+										onClick={() => setShowProfile(true)}
 									>
-										<div className="caption bg-primary line-height">P</div>
-									</a>
+										<img
+											src={user?.photoURL}
+											alt={'your avatar'}
+											className="rounded-circle"
+											height={35}
+										/>
+										{/* <div className="caption bg-primary line-height"></div> */}
+									</button>
 									<div
-										className="iq-sub-dropdown dropdown-menu"
+										className={`iq-sub-dropdown dropdown-menu ${
+											showProfile && `show`
+										}`}
 										aria-labelledby="dropdownMenuButton03"
 									>
 										<div className="card mb-0">
@@ -283,8 +293,11 @@ export default function Header({}: Props) {
 												<div className="header-title">
 													<h4 className="card-title mb-0">Profile</h4>
 												</div>
-												<div className="close-data text-right badge badge-primary cursor-pointer ">
-													<i className="ri-close-fill"></i>
+												<div
+													className="close-data text-right badge text-primary cursor-pointer "
+													onClick={() => setShowProfile(false)}
+												>
+													<i className="ri-close-fill mb-0 h4"></i>
 												</div>
 											</div>
 											<div className="card-body">
@@ -295,11 +308,15 @@ export default function Header({}: Props) {
 														</div>
 														<div className="profile-detail mt-3">
 															<h5>
-																<a href="https://templates.iqonic.design/cloudbox/html/app/user-profile-edit.html">
-																	Panny Marco
-																</a>
+																{/* <a href="https://templates.iqonic.design/cloudbox/html/app/user-profile-edit.html"> */}
+																{user?.displayName}
+																{/* </a> */}
 															</h5>
-															<p>pannymarco@gmail.com</p>
+															<p>
+																{user?.email && user?.email.length > 20
+																	? user?.email.slice(0, 20)
+																	: user?.email}
+															</p>
 														</div>
 														<a
 															href="auth-sign-in.html"
@@ -308,7 +325,7 @@ export default function Header({}: Props) {
 															Sign Out
 														</a>
 													</div>
-													<div className="profile-details mt-4 pt-4 border-top">
+													{/* <div className="profile-details mt-4 pt-4 border-top">
 														<div className="media align-items-center mb-3">
 															<div className="rounded-circle iq-card-icon-small bg-primary">
 																A
@@ -357,7 +374,7 @@ export default function Header({}: Props) {
 																</p>
 															</div>
 														</div>
-													</div>
+													</div> */}
 												</div>
 											</div>
 										</div>

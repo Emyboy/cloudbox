@@ -13,19 +13,19 @@ import { BsFillCheckCircleFill } from 'react-icons/bs'
 import { useWindowSize } from 'react-use'
 import { FileService } from '../../services/file.service'
 import { setRecentFiles } from '../../redux/reducers/file.reducer'
+import { markQueueAsDone } from '../../redux/reducers/upload.reducer'
 
 type Props = {
 	data: FileData
 }
 
-export default function EachQueue({ data }: Props) {
+export default React.memo(function EachQueue({ data }: Props) {
 	const { user } = useSelector((state: RootState) => state.auth)
 	const { recent_files } = useSelector((state: RootState) => state.file)
 	const { width } = useWindowSize()
 	const dispatch = useDispatch()
 
-	const [progress, setProgress] = useState(0)
-	const [isDone, setIsDone] = useState(false)
+	const [progress, setProgress] = useState(data.isDone ? 100 : 0)
 
 	const startUpload = async () => {
 		try {
@@ -55,11 +55,9 @@ export default function EachQueue({ data }: Props) {
 					// Handle unsuccessful uploads
 				},
 				() => {
-					// Handle successful uploads on complete
-					// For instance, get the download URL: https://firebasestorage.googleapis.com/...
 					getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
 						// console.log('File available at', downloadURL)
-						const newFile:any = await FileService.addFile(
+						const newFile: any = await FileService.addFile(
 							data.name,
 							user?.email,
 							downloadURL,
@@ -69,7 +67,7 @@ export default function EachQueue({ data }: Props) {
 						console.log('THE NEW FILE --', newFile)
 						dispatch(setRecentFiles([newFile, ...recent_files]))
 					})
-					setIsDone(true)
+					dispatch(markQueueAsDone(data.index))
 				}
 			)
 		} catch (error) {
@@ -79,10 +77,16 @@ export default function EachQueue({ data }: Props) {
 	}
 
 	useEffect(() => {
-		if (!isDone) {
+		if (!data.isDone) {
 			startUpload()
 		}
-	}, [isDone])
+	}, [data.isDone])
+
+	useEffect(() => {
+		if(data.isDone){
+			// setProgress(100)
+		}
+	},[])
 
 	return (
 		<div className="m-0">
@@ -98,7 +102,7 @@ export default function EachQueue({ data }: Props) {
 									? data.name.slice(0, width < 600 ? 13 : 30) + '..'
 									: data.name}
 							</h6>
-							{isDone && (
+							{data.isDone && (
 								<BsFillCheckCircleFill className="mx-2 text-success" />
 							)}
 						</div>
@@ -108,7 +112,7 @@ export default function EachQueue({ data }: Props) {
 					</div>
 					<div className="progress mb-0" style={{ height: '10px' }}>
 						<div
-							className={`progress-bar ${isDone && 'bg-success'}`}
+							className={`progress-bar ${data.isDone && 'bg-success'}`}
 							role="progressbar"
 							style={{ width: `${progress}%` }}
 							// aria-valuenow="50"
@@ -122,4 +126,4 @@ export default function EachQueue({ data }: Props) {
 			</div>
 		</div>
 	)
-}
+})

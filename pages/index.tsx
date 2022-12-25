@@ -35,7 +35,7 @@ export default function Index({}: Props) {
 					filesRef,
 					orderBy('createdAt','desc'),
 					where('user', '==', user.email),
-					// limit(4)
+					limit(8)
 				)
 				const querySnapshot = await getDocs(q)
 				querySnapshot.forEach((doc) => {

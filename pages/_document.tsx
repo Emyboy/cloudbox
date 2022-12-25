@@ -15,6 +15,10 @@ export default function Document() {
 					rel="shortcut icon"
 					href="https://templates.iqonic.design/cloudbox/html/assets/images/favicon.ico"
 				/>
+				<link
+					rel="stylesheet"
+					href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+				/>
 			</Head>
 			<body>
 				<Main />

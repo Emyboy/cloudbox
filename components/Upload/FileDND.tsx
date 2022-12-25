@@ -18,7 +18,7 @@ export default function FileDND({ done }: Props) {
 
 		for (let i = 0; i < e.length; i++) {
 			newQueue.push({
-				index: uploadQueue.length - 1,
+				index: uploadQueue.length + 1,
 				file: URL.createObjectURL(e[i]),
 				name: e[i].name,
 				size: e[i].size,
