@@ -40,7 +40,7 @@ export default function ActionOptions({ setDeleted, fileData, folderData }: Prop
 
 	return (
 		<>
-			{showMove && <MoveToFolderPopup folderData={folderData} />}
+			{showMove && <MoveToFolderPopup folderData={folderData} handleClose={() => setShowMove(false)} />}
 			<Dropdown>
 				<Dropdown.Toggle
 					variant="ghost"

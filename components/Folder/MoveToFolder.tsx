@@ -7,8 +7,8 @@ import { UploadedFolder } from '../../types/folder.types'
 import BreadCrumb, { BreadCrumbs } from './BreadCrumbs'
 
 type Props = {
-	folder: UploadedFolder | undefined,
-    setActiveFolder: (_id: string) => void
+	folder: UploadedFolder | undefined
+	setActiveFolder: (_id: string) => void
 }
 
 export default function MoveToFolder({ folder, setActiveFolder }: Props) {
@@ -69,12 +69,12 @@ export default function MoveToFolder({ folder, setActiveFolder }: Props) {
 	}
 
 	const goToFolder = (folder_id: string) => {
-		const _newCrumbs: BreadCrumbs[] = [];
-        let _break = false;
+		const _newCrumbs: BreadCrumbs[] = []
+		let _break = false
 		breadcrumb.forEach((val) => {
 			if (val._id === folder_id && !_break) {
 				_newCrumbs.push(val)
-                _break = true;
+				_break = true
 			}
 		})
 		setBreadcrumbs(_newCrumbs)
@@ -86,46 +86,51 @@ export default function MoveToFolder({ folder, setActiveFolder }: Props) {
 
 	useEffect(() => {
 		if (breadcrumb.length > 0) {
-			getNestedFolders(breadcrumb[breadcrumb.length - 1]._id);
-            setActiveFolder(breadcrumb[breadcrumb.length - 1]._id)
-		}else {
-            setActiveFolder('')
-        }
+			getNestedFolders(breadcrumb[breadcrumb.length - 1]._id)
+			setActiveFolder(breadcrumb[breadcrumb.length - 1]._id)
+		} else {
+			setActiveFolder('')
+		}
 	}, [breadcrumb])
 
 	return (
-		<div style={{ minHeight: '400px' }}>
+		<div style={{ minHeight: '500px', maxHeight: '600px' }}>
+            <BreadCrumb
+                breadcrumbs={breadcrumb}
+                goToRoot={() => setBreadcrumbs([])}
+                goToFolder={goToFolder}
+            />
 			{loading ? (
 				<div
 					className="d-flex justify-content-center align-items-center"
-					style={{ minHeight: '400px' }}
+					style={{ minHeight: '500px' }}
 				>
 					<small>Loading...</small>
 				</div>
 			) : (
 				<>
-					<BreadCrumb
-						breadcrumbs={breadcrumb}
-						goToRoot={() => setBreadcrumbs([])}
-						goToFolder={goToFolder}
-					/>
-					{breadcrumb.length === 0 ? (
-						<div className="list-group rounded-0">
-							{rootFolders.map((val) => {
-								return (
-									<EachFolder key={val._id} data={val} onClick={openFolder} />
-								)
-							})}
-						</div>
-					) : (
-						<div className="list-group rounded-0">
-							{folderList.map((val) => {
-								return (
-									<EachFolder key={val._id} data={val} onClick={openFolder} />
-								)
-							})}
-						</div>
-					)}
+					<div
+						className="h-100 bg-danger"
+						style={{ maxHeight: '500px', overflowY: 'auto' }}
+					>
+						{breadcrumb.length === 0 ? (
+							<div className="list-group rounded-0">
+								{rootFolders.map((val) => {
+									return (
+										<EachFolder key={val._id} data={val} onClick={openFolder} />
+									)
+								})}
+							</div>
+						) : (
+							<div className="list-group rounded-0">
+								{folderList.map((val) => {
+									return (
+										<EachFolder key={val._id} data={val} onClick={openFolder} />
+									)
+								})}
+							</div>
+						)}
+					</div>
 				</>
 			)}
 		</div>
