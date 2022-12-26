@@ -7,13 +7,15 @@ import { UploadedFolder } from '../../types/folder.types'
 import BreadCrumb, { BreadCrumbs } from './BreadCrumbs'
 
 type Props = {
-	data: UploadedFolder | undefined
+	folder: UploadedFolder | undefined,
+    setActiveFolder: (_id: string) => void
 }
 
-export default function MoveToFolder({ data }: Props) {
+export default function MoveToFolder({ folder, setActiveFolder }: Props) {
 	const [loading, setLoading] = useState(false)
 	const [rootFolders, setRootFolders] = useState<UploadedFolder[]>([])
 	const [breadcrumb, setBreadcrumbs] = useState<BreadCrumbs[]>([])
+	const [folderList, setFolderList] = useState<UploadedFolder[]>([])
 
 	const getTopLevelFolders = async () => {
 		try {
@@ -48,13 +50,48 @@ export default function MoveToFolder({ data }: Props) {
 		setBreadcrumbs([...previousCrumbs, _newFolder])
 	}
 
-	console.log(breadcrumb)
+	const getNestedFolders = async (folder_id: string) => {
+		setLoading(true)
+		const filesRef = await collection(db, 'folders')
+		const data: any = []
+		const q = await query(
+			filesRef,
+			orderBy('createdAt', 'desc'),
+			where('parentFolder', '==', folder_id)
+			// limit(8)
+		)
+		const querySnapshot = await getDocs(q)
+		querySnapshot.forEach((doc) => {
+			data.push({ ...doc.data(), doc: doc.id })
+		})
+		setFolderList(data)
+		setLoading(false)
+	}
 
-	const getNestedFolders = async (folder: UploadedFolder) => {}
+	const goToFolder = (folder_id: string) => {
+		const _newCrumbs: BreadCrumbs[] = [];
+        let _break = false;
+		breadcrumb.forEach((val) => {
+			if (val._id === folder_id && !_break) {
+				_newCrumbs.push(val)
+                _break = true;
+			}
+		})
+		setBreadcrumbs(_newCrumbs)
+	}
 
 	useEffect(() => {
 		getTopLevelFolders()
 	}, [])
+
+	useEffect(() => {
+		if (breadcrumb.length > 0) {
+			getNestedFolders(breadcrumb[breadcrumb.length - 1]._id);
+            setActiveFolder(breadcrumb[breadcrumb.length - 1]._id)
+		}else {
+            setActiveFolder('')
+        }
+	}, [breadcrumb])
 
 	return (
 		<div style={{ minHeight: '400px' }}>
@@ -70,14 +107,25 @@ export default function MoveToFolder({ data }: Props) {
 					<BreadCrumb
 						breadcrumbs={breadcrumb}
 						goToRoot={() => setBreadcrumbs([])}
+						goToFolder={goToFolder}
 					/>
-					<div className="list-group rounded-0">
-						{rootFolders.map((val) => {
-							return (
-								<EachFolder key={val._id} data={val} onClick={openFolder} />
-							)
-						})}
-					</div>
+					{breadcrumb.length === 0 ? (
+						<div className="list-group rounded-0">
+							{rootFolders.map((val) => {
+								return (
+									<EachFolder key={val._id} data={val} onClick={openFolder} />
+								)
+							})}
+						</div>
+					) : (
+						<div className="list-group rounded-0">
+							{folderList.map((val) => {
+								return (
+									<EachFolder key={val._id} data={val} onClick={openFolder} />
+								)
+							})}
+						</div>
+					)}
 				</>
 			)}
 		</div>

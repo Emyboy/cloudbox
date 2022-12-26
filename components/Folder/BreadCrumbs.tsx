@@ -8,9 +8,10 @@ export type BreadCrumbs = {
 type Props = {
 	breadcrumbs: BreadCrumbs[]
 	goToRoot: () => void
+	goToFolder: (folder_id:string) => void
 }
 
-export default function BreadCrumbs({ breadcrumbs, goToRoot }: Props) {
+export default function FolderBreadCrumbs({ breadcrumbs, goToRoot, goToFolder }: Props) {
 	// if (breadcrumbs.length === 0) {
 	// 	return null
 	// }
@@ -35,7 +36,11 @@ export default function BreadCrumbs({ breadcrumbs, goToRoot }: Props) {
 						{breadcrumbs.map((val, i) => {
 							if (i < breadcrumbs.length - 1) {
 								return (
-									<li className="breadcrumb-item" key={`__-bread${i}`}>
+									<li
+										className="breadcrumb-item"
+										key={`__-bread-${i}`}
+										onClick={() => goToFolder(val._id)}
+									>
 										<button className="text-truncate btn text-primary p-0">
 											{shortenName(val.name)}
 										</button>

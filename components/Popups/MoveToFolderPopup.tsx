@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Modal } from 'react-bootstrap'
 import { RiArrowLeftSLine, RiCloseFill } from 'react-icons/ri'
 import { UploadedFolder } from '../../types/folder.types'
@@ -9,7 +9,10 @@ type Props = {
 }
 
 export default function MoveToFolderPopup({ folderData }: Props) {
-	const iconSize = 35
+	const iconSize = 35;
+
+    const [activeFolder, setActiveFolder] = useState<string>('');
+
 	return (
 		<Modal show={true}>
 			<Modal.Header className="px-2">
@@ -28,10 +31,10 @@ export default function MoveToFolderPopup({ folderData }: Props) {
 				</div>
 			</Modal.Header>
 			<Modal.Body className="p-0">
-				<MoveToFolder data={folderData} />
+				<MoveToFolder folder={folderData} setActiveFolder={e => setActiveFolder(e)} />
 			</Modal.Body>
 			<Modal.Footer>
-				<button className="btn btn-primary">Move Here</button>
+				<button disabled={!activeFolder} className="btn btn-primary">Move Here</button>
 			</Modal.Footer>
 		</Modal>
 	)
