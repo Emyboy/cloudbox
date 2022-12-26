@@ -105,7 +105,7 @@ export default function Index({}: Props) {
 				<div className="d-flex flex-column">
 					<SectionList heading="Recent Files" list={recent_files} />
 					<SectionList heading="Recent Folders" folders={folders} />
-					<SectionList heading="Other Items" list={[]} />
+					{/* <SectionList heading="Other Items" list={[]} /> */}
 				</div>
 			</div>
 		</MainLayout>

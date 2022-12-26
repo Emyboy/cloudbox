@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { toggleUploadPopup } from '../../redux/reducers/upload.reducer'
@@ -107,15 +108,15 @@ export default function SideNav({}: Props) {
 								></ul>
 							</li> */}
 							<li className="active">
-								<a
-									href="#mydrive"
+								<Link
+									href="/"
 									className="collapsed"
 									data-toggle="collapse"
 									aria-expanded="false"
 								>
 									<i className="las la-hdd"></i>
 									<span>My Drive</span>
-								</a>
+								</Link>
 							</li>
 							<li className="">
 								<a href="page-files.html" className="">

@@ -7,6 +7,7 @@ export interface UploadedFile {
 	preview_url: string
 	file_url: string
 	user: string
+	parentFolder: string
 }
 
 export interface FileData {
@@ -17,6 +18,7 @@ export interface FileData {
 	size: number
 	user: string | undefined
 	isDone: boolean
+	parentFolder: string
 }
 
 export interface FileState {
