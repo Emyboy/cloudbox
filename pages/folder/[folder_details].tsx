@@ -14,13 +14,27 @@ import {
 import { db } from '../../firebase'
 import { UploadedFile } from '../../types/file.types'
 import { UploadedFolder } from '../../types/folder.types'
+import Head from 'next/head'
 
-type Props = { allFiles: UploadedFile[]; allFolders: UploadedFolder[] }
+type Props = {
+	allFiles: UploadedFile[]
+	allFolders: UploadedFolder[]
+	theFolder: UploadedFolder
+}
 
-export default function FolderDetails({allFiles,allFolders}: Props) {
+export default function FolderDetails({
+	allFiles,
+	allFolders,
+	theFolder,
+}: Props) {
 	return (
 		<MainLayout>
-			<FolderPreview files={allFiles} folders={allFolders} />
+			<>
+				<Head>
+					<title>{theFolder.name} Folder - CloudBox</title>
+				</Head>
+				<FolderPreview files={allFiles} folders={allFolders} />
+			</>
 		</MainLayout>
 	)
 }
@@ -54,6 +68,9 @@ export async function getStaticProps({ params }: { params: any }) {
 	const { folder_details } = params
 	console.log('PARENT FOLDER --', folder_details)
 	const filesRef = await collection(db, 'files')
+	const folderRef = await collection(db, 'folders')
+
+	// getting folder files
 	const allFiles: any = []
 	const q = await query(
 		filesRef,
@@ -65,10 +82,10 @@ export async function getStaticProps({ params }: { params: any }) {
 		allFiles.push({ ...doc.data(), doc: doc.id })
 	})
 
-
+	// getting folder folders
 	const allFolders: any = []
 	const q2 = await query(
-		filesRef,
+		folderRef,
 		orderBy('createdAt', 'desc'),
 		where('parentFolder', '==', folder_details)
 	)
@@ -77,10 +94,25 @@ export async function getStaticProps({ params }: { params: any }) {
 		allFolders.push({ ...doc.data(), doc: doc.id })
 	})
 
+	// get folder details
+	const theFolder: any = []
+	const q3 = await query(
+		folderRef,
+		orderBy('createdAt', 'desc'),
+		where('_id', '==', folder_details)
+	)
+	const querySnapshot3 = await getDocs(q3)
+	querySnapshot3.forEach((doc) => {
+		theFolder.push({ ...doc.data(), doc: doc.id })
+	})
+
+	console.log('FOLDER DETAILS --', theFolder)
+
 	return {
 		props: {
 			allFiles,
-			allFolders
+			allFolders,
+			theFolder: theFolder[0],
 		},
 		revalidate: 1, // In seconds
 	}
