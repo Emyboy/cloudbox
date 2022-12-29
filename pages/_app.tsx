@@ -12,21 +12,24 @@ import MasterControl from '../components/MasterControl'
 import MasterPopup from '../components/Popups/MasterPopup'
 import UploadQueue from '../components/Upload/UploadQueue'
 import { Toaster } from 'react-hot-toast'
+import { SSRProvider } from 'react-bootstrap'
 
 export default function MyApp({ Component, pageProps }: any) {
 	return (
-		<Provider store={store}>
-			<>
-				<MasterPopup />
-				<MasterControl />
-				<UploadQueue />
-			</>
+		<SSRProvider>
+			<Provider store={store}>
+				<>
+					<MasterPopup />
+					<MasterControl />
+					<UploadQueue />
+				</>
 
-			<div className="wrapper">
-				<Toaster position="top-center" reverseOrder={false} />
-				<Login />
-				<Component {...pageProps} />
-			</div>
-		</Provider>
+				<div className="wrapper">
+					<Toaster position="top-center" reverseOrder={false} />
+					<Login />
+					<Component {...pageProps} />
+				</div>
+			</Provider>
+		</SSRProvider>
 	)
 }

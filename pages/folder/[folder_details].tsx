@@ -27,6 +27,7 @@ export default function FolderDetails({
 	allFolders,
 	theFolder,
 }: Props) {
+	console.log('THE PROPS ---', { allFiles, allFolders, theFolder })
 	return (
 		<MainLayout>
 			<>
