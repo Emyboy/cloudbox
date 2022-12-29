@@ -5,17 +5,18 @@ import { UploadedFolder } from '../../../types/folder.types'
 
 type Props = {
     files: UploadedFile[],
-    folders: UploadedFolder[]
+    folders: UploadedFolder[],
+    folder: UploadedFolder
 }
 
-export default function FolderPreview({files,folders}: Props) {
+export default function FolderPreview({files,folders, folder}: Props) {
   return (
 		<section>
             <div className='container'>
 			<div className="row">
 				<div className="col-lg-12">
 					<div className="d-flex align-items-center justify-content-between welcome-content mb-3">
-						<h4>All Files</h4>
+						<h4>{folder.name}</h4>
 						<div className="d-flex align-items-center">
 							<div className="list-grid-toggle mr-4">
 								<span className="icon icon-grid i-grid">

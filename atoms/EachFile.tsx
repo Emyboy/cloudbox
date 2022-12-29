@@ -1,11 +1,13 @@
 import React, { useState } from 'react'
 import { UploadedFile } from '../types/file.types'
-import { AiFillFile, AiFillFileImage, AiFillFilePdf } from 'react-icons/ai'
+import {
+	AiFillFile,
+	AiFillFileImage,
+	AiFillFilePdf,
+	AiFillStar,
+} from 'react-icons/ai'
 import { BsFillFileEarmarkMusicFill } from 'react-icons/bs'
 
-
-import { useSelector } from 'react-redux'
-import { RootState } from '../redux/store'
 import ActionOptions from './ActionOptions'
 
 type Props = {
@@ -13,7 +15,6 @@ type Props = {
 }
 
 export default function EachFile({ data }: Props) {
-	const { user } = useSelector((state: RootState) => state.auth)
 	const [deleted, setDeleted] = useState(false)
 
 	const renderPreview = () => {
@@ -36,6 +37,13 @@ export default function EachFile({ data }: Props) {
 	return (
 		<div className="col-lg-3 col-md-6 col-sm-6">
 			<div className="card card-block card-stretch card-height">
+				{data.isFavorite && (
+					<AiFillStar
+						className="text-warning position-absolute"
+						size={20}
+						style={{ left: 20, top: 20, zIndex: 10 }}
+					/>
+				)}
 				<div className="card-body image-thumb">
 					<a>
 						<div className="mb-4 text-center p-3 rounded iq-thumb">
@@ -54,7 +62,10 @@ export default function EachFile({ data }: Props) {
 									: data.name}
 							</h6>
 							<div className="card-header-toolbar">
-								<ActionOptions fileData={data} setDeleted={e => setDeleted(e)} />
+								<ActionOptions
+									fileData={data}
+									setDeleted={(e) => setDeleted(e)}
+								/>
 							</div>
 						</div>
 					</a>
@@ -63,4 +74,3 @@ export default function EachFile({ data }: Props) {
 		</div>
 	)
 }
-

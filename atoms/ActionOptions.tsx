@@ -12,6 +12,7 @@ import {
 } from 'react-icons/ri'
 import MoveToFolderPopup from '../components/Popups/MoveToFolderPopup'
 import { UploadedFolder } from '../types/folder.types'
+import toast from 'react-hot-toast'
 
 type Props = {
 	fileData?: UploadedFile
@@ -35,6 +36,16 @@ export default function ActionOptions({
 				setDeleted(false)
 				return Promise.reject(error)
 			}
+		}
+	}
+
+	const toggleFavorite = async () => {
+		if (fileData && fileData.isFavorite) {
+			await FileService.updateFile(
+				{ isFavorite: !fileData.isFavorite },
+				fileData.doc
+			)
+			toast.success('Added to favorites')
 		}
 	}
 
@@ -74,8 +85,10 @@ export default function ActionOptions({
 					/>
 					<EachOption
 						Icon={(e) => <RiStarLine {...e} />}
-						text="Add To Favorite"
-						onClick={() => {}}
+						text={
+							fileData.isFavorite ? 'Remove from favorites' : 'Add to favorites'
+						}
+						onClick={toggleFavorite}
 					/>
 					<EachOption
 						Icon={(e) => <RiDownloadLine {...e} />}

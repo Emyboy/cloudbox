@@ -8,6 +8,7 @@ export interface UploadedFile {
 	file_url: string
 	user: string
 	parentFolder: string
+	isFavorite: boolean
 }
 
 export interface FileData {

@@ -34,7 +34,7 @@ export default function FolderDetails({
 				<Head>
 					<title>{theFolder.name} Folder - CloudBox</title>
 				</Head>
-				<FolderPreview files={allFiles} folders={allFolders} />
+				<FolderPreview files={allFiles} folders={allFolders} folder={theFolder} />
 			</>
 		</MainLayout>
 	)
