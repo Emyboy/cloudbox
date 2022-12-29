@@ -1,4 +1,11 @@
-import { collection, addDoc, deleteDoc, doc, getDoc } from 'firebase/firestore'
+import {
+	collection,
+	addDoc,
+	deleteDoc,
+	doc,
+	getDoc,
+	updateDoc,
+} from 'firebase/firestore'
 import { db } from '../firebase'
 import { v4 as UUID } from 'uuid'
 import { deleteObject, getStorage, ref } from 'firebase/storage'
@@ -28,7 +35,7 @@ export class FileService {
 
 			const docRef = await addDoc(collection(db, 'files'), newFile)
 			// console.log('Document written with ID: ', docRef.id)
-			
+
 			const theDoc = doc(db, 'files', docRef.id)
 			const docSnap = await getDoc(theDoc)
 			return { ...docSnap.data(), doc: docRef.id }
@@ -37,15 +44,27 @@ export class FileService {
 		}
 	}
 
-	static async deleteFile(_doc: string, file:UploadedFile) {
+	static async deleteFile(_doc: string, file: UploadedFile) {
 		try {
 			const storage = getStorage()
 			const fileRef = ref(storage, `files/${file.user}/${file.name}`)
 			await deleteDoc(doc(db, 'files', _doc))
 			await deleteObject(fileRef)
-			return Promise.resolve();
+			return Promise.resolve()
 		} catch (error) {
-			console.log(error);
+			console.log(error)
+			return Promise.reject(error)
+		}
+	}
+
+	static async updateFile(update: any, _doc: string) {
+		try {
+			const washingtonRef = doc(db, 'files', _doc)
+
+			// Set the "capital" field of the city 'DC'
+			const updated = await updateDoc(washingtonRef, update)
+			return Promise.resolve(updated)
+		} catch (error) {
 			return Promise.reject(error)
 		}
 	}

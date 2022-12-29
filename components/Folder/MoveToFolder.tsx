@@ -2,20 +2,24 @@ import { collection, getDocs, orderBy, query, where } from 'firebase/firestore'
 import React, { useEffect, useState } from 'react'
 import { RiArrowRightSLine, RiFolder3Fill } from 'react-icons/ri'
 import { db } from '../../firebase'
+import { FileService } from '../../services/file.service'
 import { UploadedFile } from '../../types/file.types'
 import { UploadedFolder } from '../../types/folder.types'
 import BreadCrumb, { BreadCrumbs } from './BreadCrumbs'
+import toast from 'react-hot-toast'
 
 type Props = {
-	folder: UploadedFolder | undefined
-	setActiveFolder: (_id: string) => void
+	folder?: UploadedFolder | null
+	file?: UploadedFile | null
+	done: () => void
 }
 
-export default function MoveToFolder({ folder, setActiveFolder }: Props) {
+export default function MoveToFolder({ folder, file, done }: Props) {
 	const [loading, setLoading] = useState(false)
 	const [rootFolders, setRootFolders] = useState<UploadedFolder[]>([])
 	const [breadcrumb, setBreadcrumbs] = useState<BreadCrumbs[]>([])
 	const [folderList, setFolderList] = useState<UploadedFolder[]>([])
+	const [activeFolder, setActiveFolder] = useState<string>('')
 
 	const getTopLevelFolders = async () => {
 		try {
@@ -80,6 +84,24 @@ export default function MoveToFolder({ folder, setActiveFolder }: Props) {
 		setBreadcrumbs(_newCrumbs)
 	}
 
+	const moveHere = async () => {
+		try {
+			if (file) {
+				await FileService.updateFile(
+					{
+						parentFolder: activeFolder,
+					},
+					file.doc
+				)
+				done()
+				toast.success('Moved successfully')
+			} else if (folder) {
+			}
+		} catch (error) {
+			alert('Error, please try again')
+		}
+	}
+
 	useEffect(() => {
 		getTopLevelFolders()
 	}, [])
@@ -94,24 +116,28 @@ export default function MoveToFolder({ folder, setActiveFolder }: Props) {
 	}, [breadcrumb])
 
 	return (
-		<div style={{ minHeight: '500px', maxHeight: '600px' }}>
-            <BreadCrumb
-                breadcrumbs={breadcrumb}
-                goToRoot={() => setBreadcrumbs([])}
-                goToFolder={goToFolder}
-            />
+		<div style={{ minHeight: '520px', maxHeight: '520px' }}>
+			<BreadCrumb
+				breadcrumbs={breadcrumb}
+				goToRoot={() => setBreadcrumbs([])}
+				goToFolder={goToFolder}
+			/>
 			{loading ? (
 				<div
 					className="d-flex justify-content-center align-items-center"
-					style={{ minHeight: '500px' }}
+					style={{ minHeight: '400px' }}
 				>
 					<small>Loading...</small>
 				</div>
 			) : (
 				<>
 					<div
-						className="h-100 bg-danger"
-						style={{ maxHeight: '500px', overflowY: 'auto' }}
+						className="h-100 "
+						style={{
+							minHeight: '400px',
+							maxHeight: '400px',
+							overflowY: 'auto',
+						}}
 					>
 						{breadcrumb.length === 0 ? (
 							<div className="list-group rounded-0">
@@ -133,6 +159,15 @@ export default function MoveToFolder({ folder, setActiveFolder }: Props) {
 					</div>
 				</>
 			)}
+			<div className="p-3 d-flex justify-content-end border-top">
+				<button
+					disabled={!activeFolder}
+					className="btn btn-primary"
+					onClick={moveHere}
+				>
+					Move Here
+				</button>
+			</div>
 		</div>
 	)
 }

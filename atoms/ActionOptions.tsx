@@ -19,7 +19,11 @@ type Props = {
 	setDeleted?: (e: boolean) => void
 }
 
-export default function ActionOptions({ setDeleted, fileData, folderData }: Props) {
+export default function ActionOptions({
+	setDeleted,
+	fileData,
+	folderData,
+}: Props) {
 	const [showMove, setShowMove] = useState(false)
 
 	const deleteFile = async () => {
@@ -40,7 +44,13 @@ export default function ActionOptions({ setDeleted, fileData, folderData }: Prop
 
 	return (
 		<>
-			{showMove && <MoveToFolderPopup folderData={folderData} handleClose={() => setShowMove(false)} />}
+			{showMove && (
+				<MoveToFolderPopup
+					folderData={folderData}
+					handleClose={() => setShowMove(false)}
+					fileData={fileData}
+				/>
+			)}
 			<Dropdown>
 				<Dropdown.Toggle
 					variant="ghost"
