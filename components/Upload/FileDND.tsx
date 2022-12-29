@@ -25,6 +25,7 @@ export default function FileDND({ done }: Props) {
 				type: e[i].type,
 				user: user?.uid,
 				isDone: false,
+				parentFolder: ''
 			})
 		}
 
