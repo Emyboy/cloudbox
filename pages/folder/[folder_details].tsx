@@ -1,83 +1,87 @@
 import React from 'react'
+import FolderPreview from '../../components/Folder/FolderPreview/FolderPreview'
 import MainLayout from '../../components/Layout/MainLayout'
+import {
+	collection,
+	doc,
+	getDoc,
+	getDocs,
+	limit,
+	orderBy,
+	query,
+	where,
+} from 'firebase/firestore'
+import { db } from '../../firebase'
+import { UploadedFile } from '../../types/file.types'
+import { UploadedFolder } from '../../types/folder.types'
 
-type Props = {}
+type Props = { allFiles: UploadedFile[]; allFolders: UploadedFolder[] }
 
-export default function FolderDetails({}: Props) {
-  return (
+export default function FolderDetails({allFiles,allFolders}: Props) {
+	return (
 		<MainLayout>
-			<section className="section">
-				<div className="container-fluid">
-					<div className="row">
-						<div className="col-lg-12">
-							<div className="d-flex align-items-center justify-content-between welcome-content mb-3">
-								<h4>All Files</h4>
-								<div className="d-flex align-items-center">
-									<div className="list-grid-toggle mr-4">
-										<span className="icon i-grid icon-grid">
-											<i className="ri-layout-grid-line font-size-20"></i>
-										</span>
-										<span className="icon i-list icon-grid">
-											<i className="ri-list-check font-size-20"></i>
-										</span>
-										<span className="label label-list">Grid</span>
-									</div>
-									<div className="dashboard1-dropdown d-flex align-items-center">
-										<div className="dashboard1-info rounded">
-											<a
-												href="#calander"
-												className="collapsed"
-												data-toggle="collapse"
-												aria-expanded="false"
-											>
-												<i className="ri-arrow-down-s-line"></i>
-											</a>
-											<ul
-												id="calander"
-												className="iq-dropdown list-inline m-0 p-0 mt-2 collapse"
-											>
-												<li className="mb-2">
-													<a
-														href="#"
-														data-toggle="tooltip"
-														data-placement="right"
-														title=""
-														data-original-title="Calander"
-													>
-														<i className="las la-calendar iq-arrow-left"></i>
-													</a>
-												</li>
-												<li className="mb-2">
-													<a
-														href="#"
-														data-toggle="tooltip"
-														data-placement="right"
-														title=""
-														data-original-title="Keep"
-													>
-														<i className="las la-lightbulb iq-arrow-left"></i>
-													</a>
-												</li>
-												<li>
-													<a
-														href="#"
-														data-toggle="tooltip"
-														data-placement="right"
-														title=""
-														data-original-title="Tasks"
-													>
-														<i className="las la-tasks iq-arrow-left"></i>
-													</a>
-												</li>
-											</ul>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</section>
+			<FolderPreview files={allFiles} folders={allFolders} />
 		</MainLayout>
 	)
+}
+
+export async function getStaticPaths() {
+	// Call an external API endpoint to get posts
+
+	const filesRef = await collection(db, 'folders')
+	const allFolders: any = []
+	const q = await query(
+		filesRef,
+		orderBy('createdAt', 'desc')
+		// where('parentFolder', '==', folder_details)
+		// limit(8)
+	)
+	const querySnapshot = await getDocs(q)
+	querySnapshot.forEach((doc) => {
+		allFolders.push({ ...doc.data(), doc: doc.id })
+	})
+
+	const paths = allFolders.map((folder: UploadedFolder) => ({
+		params: { folder_details: `${folder._id}` },
+	}))
+
+	// We'll pre-render only these paths at build time.
+	// { fallback: false } means other routes should 404.
+	return { paths, fallback: false }
+}
+
+export async function getStaticProps({ params }: { params: any }) {
+	const { folder_details } = params
+	console.log('PARENT FOLDER --', folder_details)
+	const filesRef = await collection(db, 'files')
+	const allFiles: any = []
+	const q = await query(
+		filesRef,
+		orderBy('createdAt', 'desc'),
+		where('parentFolder', '==', folder_details)
+	)
+	const querySnapshot = await getDocs(q)
+	querySnapshot.forEach((doc) => {
+		allFiles.push({ ...doc.data(), doc: doc.id })
+	})
+
+
+	const allFolders: any = []
+	const q2 = await query(
+		filesRef,
+		orderBy('createdAt', 'desc'),
+		where('parentFolder', '==', folder_details)
+	)
+	const querySnapshot2 = await getDocs(q2)
+	querySnapshot2.forEach((doc) => {
+		allFolders.push({ ...doc.data(), doc: doc.id })
+	})
+
+	return {
+		props: {
+			allFiles,
+			allFolders
+		},
+		revalidate: 1, // In seconds
+	}
 }

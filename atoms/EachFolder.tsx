@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import React from 'react'
 import { RiFolder2Fill } from 'react-icons/ri'
 import { UploadedFolder } from '../types/folder.types'
@@ -8,7 +9,7 @@ type Props = {
 
 export default function EachFolder({data}: Props) {
   return (
-		<div className="col-lg-3 col-md-6 col-sm-6">
+		<Link href={`/folder/${data._id}`} className="col-lg-3 col-md-6 col-sm-6">
 			<div className="card card-block card-stretch card-height">
 				<div className="card-body image-thumb">
 					<a href="#">
@@ -20,6 +21,6 @@ export default function EachFolder({data}: Props) {
 					</a>
 				</div>
 			</div>
-		</div>
+		</Link>
 	)
 }

@@ -24,7 +24,7 @@ export default function UploadQueue({}: Props) {
 			<button
 				onClick={() => dispatch(toggleUploadQueue())}
 				className="btn btn-primary px-3 py-3 rounded-circle shadow blur-shadow shadow-showcase"
-				style={{ position: 'fixed', bottom: 15, right: 15, zIndex: 100 }}
+				style={{ position: 'fixed', bottom: 15, right: 15, zIndex: 60 }}
 			>
 				<IoIosArrowUp size={30} />
 			</button>
